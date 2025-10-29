@@ -1,3 +1,7 @@
+if (typeof browser === 'undefined') {
+  var browser = chrome;
+}
+
 (function() {
   if (document.getElementById('efxt-transparent-video-overlay-host')) return;
 

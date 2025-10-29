@@ -1,6 +1,10 @@
+if (typeof browser === 'undefined') {
+  var browser = chrome;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  const clickSound = new Audio(chrome.runtime.getURL('public/click.mp3'));
-  const clickSound2 = new Audio(chrome.runtime.getURL('public/schum.mp3'));
+  const clickSound = new Audio(browser.runtime.getURL('public/click.mp3'));
+  const clickSound2 = new Audio(browser.runtime.getURL('public/schum.mp3'));
   const addBtn = document.getElementById('addBtn');
   const customUrl = document.getElementById('customUrl');
   const addExcBtn = document.getElementById('addExcBtn');
@@ -10,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const exceptionsList = document.getElementById('exceptionsList');
 
   function loadLists() {
-    chrome.runtime.sendMessage({ action: 'getLists' }, (response) => {
+    browser.runtime.sendMessage({ action: 'getLists' }, (response) => {
       if (response) {
         customList.innerHTML = '';
         (response.customBlocks || []).forEach(domain => {
@@ -50,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function removeCustomBlock(domain) {
-    chrome.runtime.sendMessage({ action: 'removeCustomBlock', domain: domain }, (response) => {
+    browser.runtime.sendMessage({ action: 'removeCustomBlock', domain: domain }, (response) => {
       if (response && response.success) {
         loadLists();
       }
@@ -58,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function removeException(domain) {
-    chrome.runtime.sendMessage({ action: 'removeException', domain: domain }, (response) => {
+    browser.runtime.sendMessage({ action: 'removeException', domain: domain }, (response) => {
       if (response && response.success) {
         loadLists();
       }
@@ -69,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clickSound.play().catch(e => console.log('Sound play failed:', e));
     const domain = customUrl.value.trim().toLowerCase();
     if (domain) {
-      chrome.runtime.sendMessage({ action: 'addCustomBlock', domain: domain }, (response) => {
+      browser.runtime.sendMessage({ action: 'addCustomBlock', domain: domain }, (response) => {
         if (response && response.success) {
           customUrl.value = '';
           loadLists();
@@ -82,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clickSound.play().catch(e => console.log('Sound play failed:', e));
     const domain = exceptionUrl.value.trim().toLowerCase();
     if (domain) {
-      chrome.runtime.sendMessage({ action: 'addException', domain: domain }, (response) => {
+      browser.runtime.sendMessage({ action: 'addException', domain: domain }, (response) => {
         if (response && response.success) {
           exceptionUrl.value = '';
           loadLists();
@@ -107,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   executeBtn.addEventListener('click', () => {
     clickSound2.play().catch(e => console.log('Sound play failed:', e));
-    chrome.runtime.sendMessage({ action: 'executeRun' }, (response) => {
+    browser.runtime.sendMessage({ action: 'executeRun' }, (response) => {
       if (response && response.success) {
         console.log('Executed run.js on current tab');
       }

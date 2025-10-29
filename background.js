@@ -1,3 +1,7 @@
+if (typeof browser === 'undefined') {
+  var browser = chrome;
+}
+
 let domains = new Set();
 
 function playSound() {
@@ -26,12 +30,15 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 
   if (msg.action === 'close-this-tab' && sender?.tab?.id) {
-    browser.tabs.remove(sender.tab.id).catch(console.error);
+    const removePromise = browser.tabs.remove(sender.tab.id);
+    if (removePromise && typeof removePromise.catch === 'function') {
+      removePromise.catch(console.error);
+    }
     return;
   }
 
   if (msg.action === 'getLists') {
-    chrome.storage.local.get(['customBlocks', 'customExceptions'], (result) => {
+    browser.storage.local.get(['customBlocks', 'customExceptions'], (result) => {
       sendResponse({
         customBlocks: result.customBlocks || [],
         customExceptions: result.customExceptions || []
@@ -44,11 +51,11 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     const domain = msg.domain.trim().toLowerCase();
     if (domain && !exceptions.has(domain)) {
       exceptions.add(domain);
-      chrome.storage.local.get(['customExceptions'], (result) => {
+      browser.storage.local.get(['customExceptions'], (result) => {
         const exc = result.customExceptions || [];
         if (!exc.includes(domain)) {
           exc.push(domain);
-          chrome.storage.local.set({ customExceptions: exc });
+          browser.storage.local.set({ customExceptions: exc });
           console.log(`Added exception: ${domain}`);
         }
       });
@@ -61,12 +68,12 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     const domain = msg.domain.trim().toLowerCase();
     if (exceptions.has(domain)) {
       exceptions.delete(domain);
-      chrome.storage.local.get(['customExceptions'], (result) => {
+      browser.storage.local.get(['customExceptions'], (result) => {
         const exc = result.customExceptions || [];
         const index = exc.indexOf(domain);
         if (index > -1) {
           exc.splice(index, 1);
-          chrome.storage.local.set({ customExceptions: exc });
+          browser.storage.local.set({ customExceptions: exc });
           console.log(`Removed exception: ${domain}`);
         }
       });
@@ -79,12 +86,12 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     const domain = msg.domain.trim().toLowerCase();
     if (domains.has(domain)) {
       domains.delete(domain);
-      chrome.storage.local.get(['customBlocks'], (result) => {
+      browser.storage.local.get(['customBlocks'], (result) => {
         const custom = result.customBlocks || [];
         const index = custom.indexOf(domain);
         if (index > -1) {
           custom.splice(index, 1);
-          chrome.storage.local.set({ customBlocks: custom });
+          browser.storage.local.set({ customBlocks: custom });
           console.log(`Removed custom block: ${domain}`);
         }
       });
@@ -97,11 +104,11 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     const domain = msg.domain.trim().toLowerCase();
     if (domain && !domains.has(domain)) {
       domains.add(domain);
-      chrome.storage.local.get(['customBlocks'], (result) => {
+      browser.storage.local.get(['customBlocks'], (result) => {
         const custom = result.customBlocks || [];
         if (!custom.includes(domain)) {
           custom.push(domain);
-          chrome.storage.local.set({ customBlocks: custom });
+          browser.storage.local.set({ customBlocks: custom });
           console.log(`Added custom block: ${domain}`);
         }
       });
@@ -111,12 +118,15 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 
   if (msg.action === 'executeRun') {
-    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+    browser.tabs.query({active: true, currentWindow: true}, (tabs) => {
       if (tabs[0]) {
-        chrome.tabs.executeScript(tabs[0].id, {
+        const scriptPromise = browser.tabs.executeScript(tabs[0].id, {
           file: 'run.js',
           runAt: 'document_idle'
-        }).catch(console.error);
+        });
+        if (scriptPromise && typeof scriptPromise.catch === 'function') {
+          scriptPromise.catch(console.error);
+        }
       }
     });
     sendResponse({ success: true });
@@ -124,14 +134,17 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 });
 
-chrome.commands.onCommand.addListener((command) => {
+browser.commands.onCommand.addListener((command) => {
   if (command === 'execute-run') {
-    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+    browser.tabs.query({active: true, currentWindow: true}, (tabs) => {
       if (tabs[0]) {
-        chrome.tabs.executeScript(tabs[0].id, {
+        const scriptPromise2 = browser.tabs.executeScript(tabs[0].id, {
           file: 'run.js',
           runAt: 'document_idle'
-        }).catch(console.error);
+        });
+        if (scriptPromise2 && typeof scriptPromise2.catch === 'function') {
+          scriptPromise2.catch(console.error);
+        }
       }
     });
   }
@@ -139,11 +152,10 @@ chrome.commands.onCommand.addListener((command) => {
 
 (async () => {
   try {
-    const response = await fetch(chrome.runtime.getURL('public/block.txt'));
+    const response = await fetch(browser.runtime.getURL('public/block.txt'));
     const text = await response.text();
     const lines = text.trim().split('\n').filter(line => line.trim());
     domains = new Set(lines);
-    chrome.storage.local.set({ blockedFromFile: lines });
     console.log(`Loaded ${domains.size} domains from file`);
   } catch (err) {
     console.error('Failed to load block.txt:', err);
@@ -152,7 +164,7 @@ chrome.commands.onCommand.addListener((command) => {
 
 let exceptions = new Set();
 
-chrome.storage.local.get(['customBlocks', 'customExceptions'], (result) => {
+browser.storage.local.get(['customBlocks', 'customExceptions'], (result) => {
   const custom = result.customBlocks || [];
   custom.forEach(domain => domains.add(domain));
   console.log(`Merged ${custom.length} custom domains`);
@@ -162,7 +174,7 @@ chrome.storage.local.get(['customBlocks', 'customExceptions'], (result) => {
   console.log(`Merged ${exc.length} custom exceptions`);
 
   // Inject into existing tabs after loading storage
-  chrome.tabs.query({url: '<all_urls>'}, (tabs) => {
+  browser.tabs.query({url: '<all_urls>'}, (tabs) => {
     tabs.forEach(tab => {
       if (tab.url && tab.url.startsWith('http')) {
         try {
@@ -185,10 +197,13 @@ chrome.storage.local.get(['customBlocks', 'customExceptions'], (result) => {
             }
           }
           if (isBlocked) {
-            chrome.tabs.executeScript(tab.id, {
+            const scriptPromise3 = browser.tabs.executeScript(tab.id, {
               file: 'run.js',
               runAt: 'document_start'  // Earlier injection for better media blocking
-            }).catch(console.error);
+            });
+            if (scriptPromise3 && typeof scriptPromise3.catch === 'function') {
+              scriptPromise3.catch(console.error);
+            }
           }
         } catch (err) {
           console.error('Error checking existing tab URL:', err);
@@ -198,7 +213,7 @@ chrome.storage.local.get(['customBlocks', 'customExceptions'], (result) => {
   });
 });
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' && tab.url && tab.url.startsWith('http')) {
     try {
       const url = new URL(tab.url);
@@ -220,10 +235,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         }
       }
       if (isBlocked) {
-        chrome.tabs.executeScript(tabId, {
+        const scriptPromise4 = browser.tabs.executeScript(tabId, {
           file: 'run.js',
           runAt: 'document_start'  // Earlier injection for better media blocking
         });
+        if (scriptPromise4 && typeof scriptPromise4.catch === 'function') {
+          scriptPromise4.catch(console.error);
+        }
       }
     } catch (err) {
       console.error('Error checking tab URL:', err);

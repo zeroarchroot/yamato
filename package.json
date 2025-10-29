@@ -3,7 +3,7 @@
     "web-ext": "^8.10.0"
   },
   "scripts": {
-    "build": "web-ext build --overwrite-dest",
+    "build": "./build.sh",
     "dev": "web-ext run"
   }
 }

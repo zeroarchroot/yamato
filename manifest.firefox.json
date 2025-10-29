@@ -1,0 +1,40 @@
+{
+  "manifest_version": 2,
+  "name": "Yamato",
+  "version": "1.0",
+  "permissions": [
+    "tabs",
+    "<all_urls>",
+    "storage"
+  ],
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "commands": {
+    "execute-run": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+U"
+      },
+      "description": "Slice the current tab"
+    }
+  },
+  "background": {
+      "page":"background.html"
+  },
+  "web_accessible_resources": [
+    "public/vergil.mp3",
+    "public/vergil.webm",
+    "vergil.jpeg"
+  ],
+  "description": "Prevents you from being unmotivated",
+
+  "icons": {
+    "48": "vergil.jpeg"
+  },
+
+  "applications": {
+    "gecko": {
+      "id": "root@zeroarch.org"
+    }
+  }
+}
