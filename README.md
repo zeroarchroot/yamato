@@ -6,13 +6,13 @@ Official repo: https://git.zeroarch.org/root/yamato
 
 ## Firefox
 
-Currently pending verification
+Simply click on yamato-firefox.xpi in [Releases](https://github.com/zeroarchroot/yamato/releases) or check out yamato.zeroarch.org
+*Currently I'm awaiting the verification in their store*
 
 ## Chrome
 
 1. Download and unpack https://git.zeroarch.org/root/yamato/raw/branch/main/yamato-chrome.zip
 2. Browse to chrome://extensions/ and press enable the developer mode (top-right corner)
-
 3. Load unpacked -> select the location with the unpacked .zip
 
 Done
