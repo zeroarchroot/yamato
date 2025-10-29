@@ -3,7 +3,10 @@ if (typeof browser === 'undefined') {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const clickSound = new Audio(browser.runtime.getURL('public/click.mp3'));
+  function playClickSound() {
+    const sound = new Audio(browser.runtime.getURL('public/click.mp3'));
+    sound.play().catch(e => console.log('Sound play failed:', e));
+  }
   const clickSound2 = new Audio(browser.runtime.getURL('public/schum.mp3'));
   const addBtn = document.getElementById('addBtn');
   const customUrl = document.getElementById('customUrl');
@@ -25,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
           removeBtn.textContent = 'X';
           removeBtn.className = 'remove-btn';
           removeBtn.onclick = () => {
-            clickSound.play().catch(e => console.log('Sound play failed:', e));
+            playClickSound();
             removeCustomBlock(domain);
           };
           li.appendChild(textSpan);
@@ -42,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
           removeBtn.textContent = 'X';
           removeBtn.className = 'remove-btn';
           removeBtn.onclick = () => {
-            clickSound.play().catch(e => console.log('Sound play failed:', e));
+            playClickSound();
             removeException(domain);
           };
           li.appendChild(textSpan);
@@ -70,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   addBtn.addEventListener('click', () => {
-    clickSound.play().catch(e => console.log('Sound play failed:', e));
+    playClickSound();
     const domain = customUrl.value.trim().toLowerCase();
     if (domain) {
       browser.runtime.sendMessage({ action: 'addCustomBlock', domain: domain }, (response) => {
@@ -83,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   addExcBtn.addEventListener('click', () => {
-    clickSound.play().catch(e => console.log('Sound play failed:', e));
+    playClickSound();
     const domain = exceptionUrl.value.trim().toLowerCase();
     if (domain) {
       browser.runtime.sendMessage({ action: 'addException', domain: domain }, (response) => {

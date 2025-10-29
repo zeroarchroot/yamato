@@ -47,8 +47,8 @@ build() {
       cp "$file" "$dist_dir/$file"
     fi
   done
-
-  zip -r "yamato-${platform}.zip" "$dist_dir/"
+  
+  (cd "$dist_dir" && zip -r "../yamato-${platform}.zip" .)
   rm -rf "$dist_dir"
   echo "Build complete for $platform. Zip created: dist-${platform}.zip"
 }
