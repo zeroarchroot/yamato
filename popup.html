@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Yamato</title>
+  <style>
+    body {
+      font-family: 'Impact', 'Arial Black', Arial, sans-serif;
+      width: 300px;
+      padding: 10px;
+      background-image: url("public/background.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      color: #FFFFFF;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(75, 0, 130, 0.4), rgba(0, 0, 139, 0.3));
+      z-index: -1;
+      border-radius: 8px;
+    }
+    h2 {
+      margin: 10px 0 5px 0;
+      color: #DDA0DD;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(221, 160, 221, 0.6);
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.8em;
+      transition: all 0.3s ease;
+    }
+    h3 {
+      margin: 10px 0 5px 0;
+      color: #87CEEB;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8), 0 0 8px rgba(135, 206, 235, 0.6);
+      font-weight: bold;
+      font-size: 1.2em;
+      transition: all 0.3s ease;
+    }
+    input {
+      width: 200px;
+      margin-right: 5px;
+      padding: 8px;
+      border: 1px solid #DDA0DD;
+      border-radius: 5px;
+      background: rgba(0,0,0,0.4);
+      color: #FFFFFF;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+      font-family: Arial, sans-serif;
+    }
+    input:focus {
+      outline: none;
+      border-color: #87CEEB;
+      box-shadow: 0 0 8px rgba(135, 206, 235, 0.4);
+      background: rgba(0,0,0,0.5);
+    }
+    input::placeholder {
+      color: rgba(255,255,255,0.8);
+    }
+    button {
+      padding: 8px 15px;
+      background: linear-gradient(45deg, #DDA0DD, #BA55D3);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(221, 160, 221, 0.3);
+      font-family: 'Impact', Arial, sans-serif;
+    }
+    button:hover {
+      background: linear-gradient(45deg, #87CEEB, #4682B4);
+      box-shadow: 0 4px 10px rgba(135, 206, 235, 0.4);
+      transform: translateY(-1px);
+    }
+    ul {
+      max-height: 150px;
+      overflow-y: auto;
+      list-style-type: none;
+      padding: 0;
+      background: rgba(0,0,0,0.4);
+      border-radius: 5px;
+      margin: 0;
+      border: 1px solid rgba(221, 160, 221, 0.3);
+    }
+    li {
+      padding: 8px;
+      border-bottom: 1px solid rgba(135, 206, 235, 0.3);
+      color: #FFFFFF;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+      font-family: Arial, sans-serif;
+    }
+    li:hover {
+      background: rgba(221, 160, 221, 0.1);
+    }
+    li:last-child {
+      border-bottom: none;
+    }
+    .remove-btn {
+      color: #FF69B4;
+      cursor: pointer;
+      font-weight: bold;
+      margin-left: 10px;
+      background: none;
+      border: none;
+      padding: 0;
+      transition: all 0.3s ease;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+    }
+    .remove-btn:hover {
+      color: #FF1493;
+      text-shadow: 0 0 5px #FF69B4, 1px 1px 2px rgba(0,0,0,0.7);
+    }
+    .section {
+      margin-bottom: 15px;
+      padding: 10px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 8px;
+      border: 1px solid rgba(221, 160, 221, 0.2);
+      transition: all 0.3s ease;
+    }
+    #executeBtn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #87CEEB, #4682B4);
+      color: #FFFFFF;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 8px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8), 0 0 5px rgba(135, 206, 235, 0.6);
+      font-size: 1.1em;
+      box-shadow: 0 3px 8px rgba(135, 206, 235, 0.3);
+      transition: all 0.3s ease;
+      font-family: 'Impact', Arial, sans-serif;
+    }
+    #executeBtn:hover {
+      box-shadow: 0 5px 15px rgba(135, 206, 235, 0.5);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <h2>Yamato</h2>
+  
+  <div class="section">
+    <h3>Add Custom Block</h3>
+    <input type="text" id="customUrl" placeholder="e.g., example.com">
+    <button id="addBtn">Add</button>
+  </div>
+
+  <div class="section">
+    <h3>Add Exception</h3>
+    <input type="text" id="exceptionUrl" placeholder="e.g., allowed.com">
+    <button id="addExcBtn">Add</button>
+  </div>
+  
+  <!-- <div class="section">
+    <h3>Blocked from File</h3>
+    <ul id="fileList"></ul>
+  </div> -->
+  
+  <div class="section">
+    <h3>Custom Blocks</h3>
+    <ul id="customList"></ul>
+  </div>
+
+  <div class="section">
+    <h3>Exceptions</h3>
+    <ul id="exceptionsList"></ul>
+  </div>
+
+  <div class="section">
+    <button id="executeBtn">JCE Current Tab [Ctrl+Shift+U]</button>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
