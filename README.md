@@ -6,10 +6,13 @@ Official repo: https://git.zeroarch.org/root/yamato
 
 ## Firefox
 
-Simply click on yamato-firefox.xpi in [Releases](https://github.com/zeroarchroot/yamato/releases) or check out yamato.zeroarch.org
-*Currently I'm awaiting the verification in their store*
+Click on yamato-firefox.xpi in [releases](https://github.com/zeroarchroot/yamato/releases) or check out [yamato.zeroarch.org](https://yamato.zeroarch.org)
+
+Currently I'm awaiting the verification in their store
 
 ## Chrome
+
+Switch to firefox or:
 
 1. Download and unpack https://git.zeroarch.org/root/yamato/raw/branch/main/yamato-chrome.zip
 2. Browse to chrome://extensions/ and press enable the developer mode (top-right corner)
@@ -17,7 +20,7 @@ Simply click on yamato-firefox.xpi in [Releases](https://github.com/zeroarchroot
 
 Done
 
-## Any questions?
+## Questions, bugs, suggestions, just wanna talk?
 
 [Join #main:zeroarch.org on matrix](https://matrix.to/#/#main:zeroarch.org)
 or
