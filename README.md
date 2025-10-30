@@ -4,21 +4,31 @@ Prevents you from being unmotivated
 
 Official repo: https://git.zeroarch.org/root/yamato
 
-## Firefox
+## Firefox / Librewolf
 
 Click on yamato-firefox.xpi in [releases](https://github.com/zeroarchroot/yamato/releases) or check out [yamato.zeroarch.org](https://yamato.zeroarch.org)
 
 Currently I'm awaiting the verification in their store
 
-## Chrome
-
-Switch to firefox or:
+## Google Chrome / Chromium / Edge / Brave / Opera
 
 1. Download and unpack https://git.zeroarch.org/root/yamato/raw/branch/main/yamato-chrome.zip
 2. Browse to chrome://extensions/ and press enable the developer mode (top-right corner)
 3. Load unpacked -> select the location with the unpacked .zip
 
-Done
+- Some features might not work in Opera
+
+## Android / IOS
+
+It should work in Firefox Mobile, everything else isn't tested
+
+## Todo:
+
+- [ ] Migrate to manifest v3
+- [ ] Fix opera and possible browser-specific issues
+- [ ] Add stats, streaks, and different statuses
+- [ ] Judgement cut media before loading
+- [ ] Upload it to every possible store 
 
 ## Questions, bugs, suggestions, just wanna talk?
 
